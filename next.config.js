@@ -1,14 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  exportPathMap: function () {
-    return {
-      "/": { page: "/" },
-    };
-  },
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH,
+  assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH,
+  exportPathMap: () => ({
+    "/": { page: "/" },
+  }),
   images: {
     loader: "akamai",
-    path: "/"
+    path: "/",
   },
 };
 
