@@ -101,6 +101,7 @@ class CreateParticles {
   text: string;
   camera: THREE.Camera;
   renderer: THREE.WebGLRenderer;
+  container: HTMLElement;
   raycaster: THREE.Raycaster;
   mouse: THREE.Vector2;
   colorChange: THREE.Color;
@@ -133,9 +134,12 @@ class CreateParticles {
     this.particleImg = particleImg;
     this.camera = camera;
     this.renderer = renderer;
+    this.container = renderer.domElement;
 
     this.raycaster = new THREE.Raycaster();
-    this.mouse = new THREE.Vector2(-200, 200);
+    // TODO need refactor
+    // place the mouse between line at the beginning for better effect
+    this.mouse = new THREE.Vector2(0, 0.15);
 
     this.colorChange = new THREE.Color();
 
@@ -176,16 +180,16 @@ class CreateParticles {
   }
 
   onMouseDown(event: MouseEvent) {
-    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    // prevent right key
+    if (event.buttons === 2) return;
 
     const vector = new THREE.Vector3(this.mouse.x, this.mouse.y, 0.5);
     vector.unproject(this.camera);
-    const dir = vector.sub(this.camera.position).normalize();
-    const distance = -this.camera.position.z / dir.z;
-    this.currenPosition = this.camera.position
-      .clone()
-      .add(dir.multiplyScalar(distance));
+    // const dir = vector.sub(this.camera.position).normalize();
+    // const distance = -this.camera.position.z / dir.z;
+    // this.currenPosition = this.camera.position
+    //   .clone()
+    //   .add(dir.multiplyScalar(distance));
 
     // const pos = this.particles && this.particles.geometry.attributes.position;
     this.buttom = true;
@@ -198,8 +202,11 @@ class CreateParticles {
   }
 
   onMouseMove(event: MouseEvent) {
-    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    // TODO need performance improvements
+    const rendererSize = this.renderer.getSize(new THREE.Vector2(0, 0));
+    const boundingBox = this.container.getBoundingClientRect();
+    this.mouse.x = ((event.clientX - boundingBox.x) / rendererSize.x) * 2 - 1;
+    this.mouse.y = -((event.clientY - boundingBox.y) / rendererSize.y) * 2 + 1;
   }
 
   render() {
