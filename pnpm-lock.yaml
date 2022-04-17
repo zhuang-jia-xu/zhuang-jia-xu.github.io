@@ -1,6 +1,8 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@faker-js/faker': ^6.1.2
+  '@react-spring/parallax': ^9.4.4
   '@types/node': 17.0.21
   '@types/react': 17.0.40
   '@types/three': ^0.139.0
@@ -16,6 +18,7 @@ specifiers:
   typescript: 4.6.2
 
 dependencies:
+  '@react-spring/parallax': 9.4.4_react-dom@17.0.2+react@17.0.2
   next: 12.1.0_f8aad44cc74648f939a037a6a21a1e65
   react: 17.0.2
   react-dom: 17.0.2_react@17.0.2
@@ -24,6 +27,7 @@ dependencies:
   three: 0.139.2
 
 devDependencies:
+  '@faker-js/faker': 6.1.2
   '@types/node': 17.0.21
   '@types/react': 17.0.40
   '@types/three': 0.139.0
@@ -64,6 +68,11 @@ packages:
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /@faker-js/faker/6.1.2:
+    resolution: {integrity: sha512-QSvmexHCxeRUk1/yKmoEDaWB5Hohjvtim5g2JJwy8S/l0L4b3y/GxSpE6vN4SBoVGGahEQW21uqyRr7EofI35A==}
+    engines: {node: '>=14.0.0', npm: '>=6.0.0'}
     dev: true
 
   /@humanwhocodes/config-array/0.9.5:
@@ -258,6 +267,18 @@ packages:
       '@react-spring/shared': 9.4.4_react@17.0.2
       '@react-spring/types': 9.4.4
       react: 17.0.2
+    dev: false
+
+  /@react-spring/parallax/9.4.4_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-Sr9XlrTVOU6pUKEvRfD6gcFGxY5P/9ufNCK7iB6zmMnoocYLYUr/4oBqWauc+DJeHNWtfNJjBINzwvg0x2cN1A==}
+    peerDependencies:
+      react: ^16.8.0  || ^17.0.0
+    dependencies:
+      '@react-spring/shared': 9.4.4_react@17.0.2
+      '@react-spring/web': 9.4.4_react-dom@17.0.2+react@17.0.2
+      react: 17.0.2
+    transitivePeerDependencies:
+      - react-dom
     dev: false
 
   /@react-spring/rafz/9.4.4:
