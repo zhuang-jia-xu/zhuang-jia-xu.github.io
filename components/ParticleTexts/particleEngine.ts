@@ -94,6 +94,8 @@ export default class Environment {
   }
 }
 
+const backgroundParticle: [number, number, number] = [0.7, 0.8, 0.6];
+
 class CreateParticles {
   scene: THREE.Scene;
   font: ThreeFont;
@@ -115,6 +117,7 @@ class CreateParticles {
     area: number;
     ease: number;
   };
+  exploded: boolean = false;
   planeArea?: THREE.Mesh;
   currenPosition?: THREE.Vector3;
   particles?: THREE.Points;
@@ -139,7 +142,7 @@ class CreateParticles {
     this.raycaster = new THREE.Raycaster();
     // TODO need refactor
     // place the mouse between line at the beginning for better effect
-    this.mouse = new THREE.Vector2(0, 0.15);
+    this.mouse = new THREE.Vector2(100, 100);
 
     this.colorChange = new THREE.Color();
 
@@ -147,7 +150,7 @@ class CreateParticles {
 
     this.data = {
       text: this.text,
-      amount: 1500,
+      amount: 600,
       particleSize: 1.5,
       particleColor: 0xffffff,
       textSize: Math.min(16, window.screen.width / 15 / 8),
@@ -210,8 +213,8 @@ class CreateParticles {
   }
 
   render() {
-    const time = ((0.001 * performance.now()) % 12) / 12;
-    const zigzagTime = (1 + Math.sin(time * 2 * Math.PI)) / 6;
+    // const time = ((0.001 * performance.now()) % 12) / 12;
+    // const zigzagTime = (1 + Math.sin(time * 2 * Math.PI)) / 6;
 
     this.raycaster.setFromCamera(this.mouse, this.camera);
 
@@ -227,6 +230,22 @@ class CreateParticles {
       const mx = intersects[0].point.x;
       const my = intersects[0].point.y;
       const mz = intersects[0].point.z;
+
+      if (pos && copy && coulors && size)
+        if (!this.exploded) {
+          for (let i = 0, l = pos.count; i < l; i++) {
+            const explodeRange = 100;
+            const posX =
+              copy.getX(i) + THREE.MathUtils.randFloatSpread(explodeRange);
+            const posY =
+              copy.getY(i) + THREE.MathUtils.randFloatSpread(explodeRange);
+            const posZ =
+              copy.getZ(i) + THREE.MathUtils.randFloatSpread(explodeRange);
+
+            pos.setXYZ(i, posX, posY, posZ);
+          }
+          this.exploded = true;
+        }
 
       if (pos && copy && coulors && size)
         for (let i = 0, l = pos.count; i < l; i++) {
@@ -257,14 +276,14 @@ class CreateParticles {
 
           const mouseDistance = this.distance(mx, my, px, py);
           let d = (dx = mx - px) * dx + (dy = my - py) * dy;
-          const f = -this.data.area / d;
+          const f = -this.data.area / d / 2;
 
           if (this.buttom) {
             const t = Math.atan2(dy, dx);
             px -= f * Math.cos(t);
             py -= f * Math.sin(t);
 
-            this.colorChange.setHSL(0.5 + zigzagTime, 1.0, 0.5);
+            this.colorChange.setHSL(...backgroundParticle);
             coulors.setXYZ(
               i,
               this.colorChange.r,
@@ -279,7 +298,7 @@ class CreateParticles {
               py > initY + 70 ||
               py < initY - 70
             ) {
-              this.colorChange.setHSL(0.15, 1.0, 0.5);
+              this.colorChange.setHSL(...backgroundParticle);
               coulors.setXYZ(
                 i,
                 this.colorChange.r,
@@ -295,7 +314,7 @@ class CreateParticles {
                 px -= 0.03 * Math.cos(t);
                 py -= 0.03 * Math.sin(t);
 
-                this.colorChange.setHSL(0.15, 1.0, 0.5);
+                this.colorChange.setHSL(...backgroundParticle);
                 coulors.setXYZ(
                   i,
                   this.colorChange.r,
@@ -324,7 +343,7 @@ class CreateParticles {
                 py > initY + 10 ||
                 py < initY - 10
               ) {
-                this.colorChange.setHSL(0.15, 1.0, 0.5);
+                this.colorChange.setHSL(...backgroundParticle);
                 coulors.setXYZ(
                   i,
                   this.colorChange.r,
@@ -391,7 +410,11 @@ class CreateParticles {
       let points = shape.getSpacedPoints(amountPoints);
 
       points.forEach((element, z) => {
-        const a = new THREE.Vector3(element.x, element.y, 0);
+        const a = new THREE.Vector3(
+          element.x + THREE.MathUtils.randFloatSpread(1),
+          element.y + THREE.MathUtils.randFloatSpread(1),
+          0
+        );
         thePoints.push(a);
         colors.push(this.colorChange.r, this.colorChange.g, this.colorChange.b);
         sizes.push(1);
