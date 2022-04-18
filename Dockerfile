@@ -35,4 +35,4 @@ ENV PORT $PORT
 
 EXPOSE $PORT
 
-CMD yarn start -p $PORT
+CMD ["yarn", "start", "-p", "${PORT}"]
