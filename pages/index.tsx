@@ -6,7 +6,6 @@ import { ParticleText, BouncingChevron } from "components";
 import { Parallax, ParallaxLayer } from "@react-spring/parallax";
 
 import { faker } from "@faker-js/faker";
-import clsx from "clsx";
 
 const Home: NextPage = () => {
   return (
