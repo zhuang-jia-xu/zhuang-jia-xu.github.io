@@ -26,6 +26,7 @@ export default class Environment {
     this.createRenderer();
     this.setup();
     this.bindEvents();
+    this.render();
   }
 
   bindEvents() {
@@ -94,7 +95,7 @@ export default class Environment {
   }
 }
 
-const backgroundParticle: [number, number, number] = [0.7, 0.8, 0.6];
+const bgParticleColor: [number, number, number] = [0.7, 0.7, 0.6];
 
 class CreateParticles {
   scene: THREE.Scene;
@@ -153,7 +154,7 @@ class CreateParticles {
       amount: 600,
       particleSize: 1.5,
       particleColor: 0xffffff,
-      textSize: Math.min(16, window.screen.width / 15 / 8),
+      textSize: 16,
       area: 50,
       ease: 0.05,
     };
@@ -276,14 +277,14 @@ class CreateParticles {
 
           const mouseDistance = this.distance(mx, my, px, py);
           let d = (dx = mx - px) * dx + (dy = my - py) * dy;
-          const f = -this.data.area / d / 2;
+          const f = -this.data.area / d;
 
           if (this.buttom) {
             const t = Math.atan2(dy, dx);
             px -= f * Math.cos(t);
             py -= f * Math.sin(t);
 
-            this.colorChange.setHSL(...backgroundParticle);
+            this.colorChange.setHSL(...bgParticleColor);
             coulors.setXYZ(
               i,
               this.colorChange.r,
@@ -298,7 +299,7 @@ class CreateParticles {
               py > initY + 70 ||
               py < initY - 70
             ) {
-              this.colorChange.setHSL(...backgroundParticle);
+              this.colorChange.setHSL(...bgParticleColor);
               coulors.setXYZ(
                 i,
                 this.colorChange.r,
@@ -314,7 +315,7 @@ class CreateParticles {
                 px -= 0.03 * Math.cos(t);
                 py -= 0.03 * Math.sin(t);
 
-                this.colorChange.setHSL(...backgroundParticle);
+                this.colorChange.setHSL(...bgParticleColor);
                 coulors.setXYZ(
                   i,
                   this.colorChange.r,
@@ -343,7 +344,7 @@ class CreateParticles {
                 py > initY + 10 ||
                 py < initY - 10
               ) {
-                this.colorChange.setHSL(...backgroundParticle);
+                this.colorChange.setHSL(...bgParticleColor);
                 coulors.setXYZ(
                   i,
                   this.colorChange.r,
@@ -380,7 +381,7 @@ class CreateParticles {
       -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
     const yMid =
       geometry.boundingBox &&
-      (geometry.boundingBox.max.y - geometry.boundingBox.min.y) / 2.85;
+      (geometry.boundingBox.max.y - geometry.boundingBox.min.y) / 3;
 
     geometry.center();
 
@@ -409,10 +410,19 @@ class CreateParticles {
 
       let points = shape.getSpacedPoints(amountPoints);
 
+      const getSpread = () => {
+        return (
+          (THREE.MathUtils.randFloatSpread(1) *
+            2 ** THREE.MathUtils.randFloat(1, 10)) /
+            200 +
+          THREE.MathUtils.randFloatSpread(0.7)
+        );
+      };
+
       points.forEach((element, z) => {
         const a = new THREE.Vector3(
-          element.x + THREE.MathUtils.randFloatSpread(1),
-          element.y + THREE.MathUtils.randFloatSpread(1),
+          element.x + getSpread(),
+          element.y + getSpread(),
           0
         );
         thePoints.push(a);
