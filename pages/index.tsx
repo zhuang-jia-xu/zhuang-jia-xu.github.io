@@ -16,9 +16,12 @@ const Home: NextPage = () => {
       <Parallax pages={2}>
         <ParallaxLayer offset={0} speed={2} factor={3}>
           {/* background */}
-          <div className="h-full w-full bg-black">
-            <div className="h-screen">
+          <div className="h-full w-full bg-black ">
+            <div className="h-screen relative">
               <ParticleText text={"Max\nChuang"} />
+              <div className="flex w-full justify-center absolute top-3/4">
+                <BouncingChevron />
+              </div>
             </div>
           </div>
         </ParallaxLayer>
@@ -30,9 +33,6 @@ const Home: NextPage = () => {
             layout="fill"
             priority
           /> */}
-        </ParallaxLayer>
-        <ParallaxLayer offset={0.8} speed={1}>
-          <BouncingChevron />
         </ParallaxLayer>
       </Parallax>
     </>
