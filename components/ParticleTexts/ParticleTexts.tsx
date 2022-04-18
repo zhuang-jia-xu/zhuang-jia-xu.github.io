@@ -1,4 +1,7 @@
-import React, { useEffect, useRef } from "react";
+//types
+import type { FC } from "react";
+
+import { useEffect, useRef } from "react";
 // three
 import * as THREE from "three";
 import {
@@ -6,10 +9,8 @@ import {
   Font as ThreeFont,
 } from "three/examples/jsm/loaders/FontLoader";
 import Environment from "./particleEngine";
-// styles
-import styles from "./ParticleTexts.module.scss";
-//types
-import type { FC } from "react";
+
+import clsx from "clsx";
 
 export const ParticleText: FC<{ text: string }> = ({ text }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -40,5 +41,5 @@ export const ParticleText: FC<{ text: string }> = ({ text }) => {
     };
   });
 
-  return <div className={styles.container} ref={containerRef} />;
+  return <div className={clsx("w-full", "h-full")} ref={containerRef} />;
 };

@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html,
 body {
   padding: 0;
@@ -8,6 +12,10 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+body {
+  background-color: #000000;
 }
 
 /* width */
