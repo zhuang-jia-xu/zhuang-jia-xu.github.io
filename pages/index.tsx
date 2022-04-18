@@ -25,7 +25,13 @@ const Home: NextPage = () => {
           </div>
         </ParallaxLayer>
         <ParallaxLayer offset={0.8} speed={1}>
-          <Image alt="test" src={faker.image.abstract()} layout="fill" />
+          <Image
+            alt="test"
+            src={faker.image.abstract()}
+            loader={({ src }) => src}
+            layout="fill"
+            priority
+          />
         </ParallaxLayer>
       </Parallax>
     </>
