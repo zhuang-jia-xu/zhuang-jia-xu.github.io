@@ -16,7 +16,7 @@ const Home: NextPage = () => {
       <Parallax pages={2}>
         <ParallaxLayer offset={0} speed={2} factor={3}>
           {/* background */}
-          <div className="h-full w-full bg-black ">
+          <div className="h-full w-full bg-black">
             <div className="h-screen relative">
               <ParticleText text={"Max\nChuang"} />
               <div className="flex w-full justify-center absolute top-3/4">

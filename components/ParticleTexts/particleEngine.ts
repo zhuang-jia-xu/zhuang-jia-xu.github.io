@@ -1,6 +1,29 @@
 import * as THREE from "three";
 import type { Font as ThreeFont } from "three/examples/jsm/loaders/FontLoader";
 
+const cyrb53 = function (str: string, seed = 0) {
+  let h1 = 0xdeadbeef ^ seed,
+    h2 = 0x41c6ce57 ^ seed;
+  for (let i = 0, ch; i < str.length; i++) {
+    ch = str.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
+  }
+  h1 =
+    Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^
+    Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 =
+    Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^
+    Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return 4294967296 * (2097151 & h2) + (h1 >>> 0);
+};
+
+const random = (num: number, range: number = 1, seed: string = "hash") => {
+  const rand = (cyrb53(seed, num) % 1_000_000) / 1_000_000;
+  if (range === 1) return rand;
+  return Math.round(rand * range);
+};
+
 export default class Environment {
   particle: THREE.Texture;
   font: ThreeFont;
@@ -216,6 +239,7 @@ class CreateParticles {
   render() {
     // const time = ((0.001 * performance.now()) % 12) / 12;
     // const zigzagTime = (1 + Math.sin(time * 2 * Math.PI)) / 6;
+    const time = Math.round(performance.now());
 
     this.raycaster.setFromCamera(this.mouse, this.camera);
 
@@ -362,6 +386,18 @@ class CreateParticles {
           px += (initX - px) * this.data.ease;
           py += (initY - py) * this.data.ease;
           pz += (initZ - pz) * this.data.ease;
+
+          // add random movement to the particles
+          const interval = 1000;
+          const freq = 20;
+          const t = Math.round((time + random(i, interval)) / interval);
+          if ((t + i) % freq === random(t, freq)) {
+            const amp = 0.1;
+            const linear = 1 - (time % interval) / interval;
+            px += amp * (random(i * t + 1) - 0.5) * linear;
+            py += amp * (random(i + t * 2) - 0.5) * linear;
+            pz += amp * (random(i ^ (t * 3)) - 0.5) * linear;
+          }
 
           pos.setXYZ(i, px, py, pz);
           pos.needsUpdate = true;
